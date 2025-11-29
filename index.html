@@ -140,7 +140,6 @@
                  <h3 className={`text-xs sm:text-sm font-bold ${isMain ? 'text-indigo-100' : 'text-slate-200'}`}>
                    {title}
                  </h3>
-                 {isMain && <span className="text-[10px] text-indigo-300 font-medium block mt-0.5">※ここが本丸（Core Demo）</span>}
                </div>
             </div>
             <div className={`p-1 rounded-full ${isMain ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-500'}`}>
@@ -165,11 +164,11 @@
         <div className="p-3 sm:p-4 bg-indigo-900/20 border border-indigo-500/30 rounded-xl shadow-sm">
           <h2 className="text-xs sm:text-sm font-bold text-indigo-200 mb-2 flex items-center gap-2">
             <div className="w-1 h-4 sm:h-5 bg-indigo-500 rounded-full"></div>
-            Finance ADIC とは？
+            Finance ADIC とは
           </h2>
           <p className="text-[10px] sm:text-xs text-slate-300 leading-relaxed">
-            計算ロジック（企業秘密）を秘匿したまま、その実行プロセスを<strong>「再計算可能な台帳（Ledger）」</strong>として記録・保存する技術規格です。<br className="hidden sm:block" />
-            この台帳さえあれば、ソースコードを開示することなく、第三者がいつでも「計算の正当性」だけを100%証明できるようになります。
+            計算ロジック（秘密）を隠したまま、実行プロセスを<strong>「台帳」</strong>として記録。<br className="hidden sm:block" />
+            ソースコード不要で、第三者が「計算の正当性」を100%検証可能にする技術規格です。
           </p>
         </div>
       </section>
@@ -180,17 +179,17 @@
       <div className="glass-panel p-3 mb-4 rounded-lg border-l-4 border-emerald-500">
         <h3 className="text-xs font-bold text-emerald-300 mb-1 flex items-center gap-1.5">
           <ShieldCheck size={14} />
-          なぜ「台帳だけで証明」になる？
+          なぜ台帳だけで証明可能？
         </h3>
         <div className="text-[10px] sm:text-xs text-slate-300 space-y-1">
           <p>このシステムは<strong className="text-white">3つの鉄則（仕様）</strong>で定義されます。</p>
           <ol className="list-decimal list-inside space-y-0.5 ml-1 text-slate-400">
-            <li>出力に効く計算は全て<span className="text-emerald-400">「記録機能つき専用ツール」</span>で行う</li>
-            <li>そのツールは使った数字を<span className="text-emerald-400">必ず台帳に残す</span></li>
-            <li>検証は<span className="text-emerald-400">台帳だけ</span>を見て再計算・照合する</li>
+            <li>計算は全て<span className="text-emerald-400">「記録ツール」</span>で実行</li>
+            <li>使用数値は<span className="text-emerald-400">必ず台帳に残す</span></li>
+            <li>検証は<span className="text-emerald-400">台帳のみ</span>で再計算</li>
           </ol>
           <p className="mt-1 pt-1 border-t border-slate-700/50 text-[9px] sm:text-[10px] text-slate-500">
-            → このルール下では「台帳＝計算の全貌」であることが保証されます。
+            → 「台帳＝計算の全貌」を保証。
           </p>
         </div>
       </div>
@@ -213,8 +212,7 @@
                 </span>
               </h1>
               <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
-                金融商品の<strong>モデル設計・計算・監査</strong>実務家向けデモ。<br/>
-                ロジック（秘密）は隠し、出力の正当性だけを証明します。
+                金融モデルのロジックを隠蔽し、正当性のみ証明する実務家向けデモ。<br/>
               </p>
             </div>
             <div className="flex-1 w-full bg-slate-900/50 border border-slate-700/50 rounded-xl p-4 shadow-lg">
@@ -224,11 +222,11 @@
               </h3>
               <ul className="space-y-1.5">
                 {[
-                  "VaR / ES / XVA 等のリスク計算",
-                  "プライシングモデル構築・検証",
-                  "MRM (モデルリスク管理) エビデンス",
-                  "市場データ統合の誤差管理",
-                  "社内審査・監査の証跡提出"
+                  "VaR / XVA等のリスク計算",
+                  "モデル構築・検証",
+                  "MRMエビデンス",
+                  "データ誤差管理",
+                  "監査証跡の提出"
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-[11px] sm:text-xs text-slate-300">
                     <CheckSquare size={12} className="mt-0.5 text-emerald-500 shrink-0" />
@@ -262,7 +260,7 @@
                 ミニ台帳で体験
               </h2>
               <p className="text-[11px] sm:text-xs text-slate-400 mb-3 max-w-2xl leading-relaxed">
-                VaRも分解すれば四則演算。まずは<strong>「超単純リスク計算」</strong>で仕組みを直感理解。
+                VaRも分解すれば四則演算。単純計算で直感理解。
               </p>
 
               <div className="grid md:grid-cols-2 gap-4 bg-slate-950/50 rounded-xl p-3 border border-slate-800/50">
@@ -315,14 +313,13 @@
                     className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 px-3 py-2 rounded-lg border border-slate-700/50 w-full text-left transition-colors"
                   >
                     <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                    なぜこれで「穴が残り得ない」と言える？（解説）
+                    なぜ「不正」がバレる？（解説）
                   </button>
                   
                   {isOpen && (
                     <div className="mt-2 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 text-[10px] sm:text-xs text-slate-300 leading-relaxed animate-in fade-in slide-in-from-top-1">
                       <p className="mb-2">
-                          ここでは P=1,000万・r=5%(=1/20) だけを使う<strong>超単純モデル</strong>で、
-                          「正しい台帳」と「壊れた台帳」がどう見えるかを確認します。
+                          P=1,000万・r=5%(=1/20) の単純モデルで、「正しい台帳」と「壊れた台帳」の違いを確認します。
                       </p>
 
                       <ol className="list-decimal list-inside space-y-2 ml-1 text-slate-400 mb-4">
@@ -331,36 +328,35 @@
                           Step1: r = <span className="font-mono text-emerald-400">1/20</span><br />
                           Step2: L = P×r = 10,000,000×1/20 ={" "}
                           <span className="font-mono text-emerald-400">500,000/1</span><br />
-                          <span className="text-slate-500">検証者は台帳どおりに電卓で再計算するだけで、一致を確認できます。</span>
+                          <span className="text-slate-500">台帳通りの再計算で一致を確認可能。</span>
                           </li>
 
                           <li>
-                          <span className="font-bold text-rose-300">係数をいじった穴（改ざん）</span><br />
-                          誰かが r 行だけ <span className="font-mono">1/25</span> に書き換え、
-                          L 行は 500,000/1 のまま提出したとします。<br />
+                          <span className="font-bold text-rose-300">係数改ざん時</span><br />
+                          r 行だけ <span className="font-mono">1/25</span> に書き換え、
+                          L 行は 500,000/1 のまま提出。<br />
                           検証者は 10,000,000×1/25=400,000 を再計算 →{" "}
-                          <span className="font-mono text-rose-400">台帳の 500,000/1 と絶対に一致しません</span>。<br />
-                          <strong>台帳だけ</strong>を見ていても、この矛盾は必ず露出します。
+                          <span className="font-mono text-rose-400">結果と一致せず露見</span>。<br />
+                          <strong>台帳だけ</strong>で矛盾を検知。
                           </li>
 
                           <li>
-                          <span className="font-bold text-rose-300">ステップ抜けの穴</span><br />
-                          Step2（LOSS 行）を丸ごと削って台帳を出した場合、L がいくつで算出されたかを示す行が一切ありません。<br />
-                          このルールでは「台帳に存在しない値は、最終出力として認めない」ので、
-                          <span className="text-rose-300"> L をごまかして提出すること自体ができません</span>。
+                          <span className="font-bold text-rose-300">工程の欠落</span><br />
+                          Step2（LOSS 行）を丸ごと削った場合、L がいくつで算出されたか不明。<br />
+                          「台帳にない値は認めない」ため、
+                          <span className="text-rose-300"> 値の捏造が不可能</span>。
                           </li>
                       </ol>
 
                       <div className="mt-3 pt-3 border-t border-slate-700/30 text-[9px] sm:text-[10px] text-slate-400 leading-relaxed bg-indigo-900/10 p-3 rounded-lg border border-indigo-500/10">
                           <strong className="text-indigo-300 flex items-center gap-1.5 mb-1">
-                             <Sigma size={12} /> Why This Works? (技術的背景)
+                             <Sigma size={12} /> 技術的背景 (Ghost Drift)
                           </strong>
                           <div className="mb-2">
-                             従来のシステムでは「浮動小数点の誤差（計算するPCによって微細なズレが出る）」という壁があり、数年後の完全な再計算は不可能でした。<br/>
-                             Finance ADIC は、全ての計算を<strong>「有理数（整数比）」</strong>で固定する独自技術により、この壁を突破。いつどこで誰が計算しても、1ビットもズレない完全な再現性を保証します。
+                             従来は浮動小数点誤差で再現困難でしたが、Finance ADICは計算を<strong>「有理数」</strong>で固定し、完全な再現性を保証します。
                           </div>
                           <div className="flex flex-col sm:flex-row gap-2 mt-3">
-                              <span className="text-slate-500 self-center sm:self-auto">Deep Dive (Theory):</span>
+                              <span className="text-slate-500 self-center sm:self-auto">Deep Dive:</span>
                               <a href="https://ghostdrifttheory.github.io/prime-counter-demo-en/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline flex items-center gap-1">
                                   素数計算OS <ExternalLink size={8} />
                               </a>
@@ -388,23 +384,23 @@
       let icon = <Activity className="text-slate-500" />;
 
       if (appState === 'idle' && !hasResult) {
-         title = "日常: モデル実行 & 証跡保存";
-         desc = "日々のVaR計算。ADICがプロセスを「台帳」として自動保存。";
+         title = "日常: 計算 & 証跡保存";
+         desc = "計算プロセスを「台帳」として自動保存。";
          color = "border-indigo-500/30 bg-indigo-900/10";
          icon = <div className="p-1.5 bg-indigo-500/20 rounded-full text-indigo-400"><FileArchive size={14} /></div>;
       } else if (hasResult && (appState === 'ready' || appState === 'idle')) {
-         title = "数年後: 監査・有事";
-         desc = "「3年前の計算根拠は？」モデルが変わっていても台帳は不変。「Verify」で証明。";
+         title = "数年後: 監査・検証";
+         desc = "モデル変更後も、台帳があれば正当性を証明可能。";
          color = "border-sky-500/30 bg-sky-900/10";
          icon = <div className="p-1.5 bg-sky-500/20 rounded-full text-sky-400"><Clock size={14} /></div>;
       } else if (appState === 'verifying') {
-         title = "検証: ブラックボックス証明";
-         desc = "監査人のPCで台帳のみを再計算中。元モデル無しで正当性をチェック。";
+         title = "検証: 再計算チェック";
+         desc = "モデル無しで、台帳のみから再計算中。";
          color = "border-amber-500/30 bg-amber-900/10";
          icon = <div className="p-1.5 bg-amber-500/20 rounded-full text-amber-400"><RefreshCw size={14} className="animate-spin" /></div>;
       } else if (appState === 'verified') {
-         title = "完了: 完全な証明";
-         desc = "「当時の数字は手順通り算出された」と証明。説明責任を完遂。";
+         title = "完了: 証明成功";
+         desc = "手順通りの算出を証明。説明責任を完遂。";
          color = "border-emerald-500/30 bg-emerald-900/10";
          icon = <div className="p-1.5 bg-emerald-500/20 rounded-full text-emerald-400"><CheckCircle2 size={14} /></div>;
       }
@@ -517,16 +513,16 @@
         </div>
         <div className="space-y-1 w-full">
           <h3 className="text-[10px] sm:text-xs font-bold text-slate-200">
-            VALUE PROP
+            導入メリット
           </h3>
           <div className="text-[10px] sm:text-xs text-slate-400 leading-snug mt-1 grid gap-2">
             <div>
-              <span className="text-rose-400 font-bold">AS-IS:</span> 
-              3年後の監査や外部委託時、モデル（Excel/コード）が無いと検証不能。責任曖昧。
+              <span className="text-rose-400 font-bold">Before:</span> 
+              モデル紛失等で検証不能に。
             </div>
             <div className="border-t border-slate-700/50 pt-2 mt-1">
-              <span className="text-emerald-400 font-bold block mb-0.5">TO-BE:</span> 
-              <strong className="text-slate-200">「PDF＋台帳＋Verify」</strong>の3点で、モデル無しでもどこでも検証再現。3年後でも客観証明。
+              <span className="text-emerald-400 font-bold block mb-0.5">After:</span> 
+              <strong className="text-slate-200">台帳があればいつでも完全証明。</strong>
             </div>
           </div>
         </div>
@@ -537,9 +533,9 @@
       <div className="mb-3 px-3 py-2 bg-amber-900/20 border border-amber-500/20 rounded-lg text-amber-200/80 text-[10px] leading-relaxed flex gap-2">
          <MonitorCheck size={14} className="shrink-0 mt-0.5" />
          <div>
-            <strong className="block mb-0.5 text-amber-100">3年後の監査シミュレーション</strong>
-            3年前の「レシート（台帳）」だけを取り出し、モデルコード無しで再計算。<br/>
-            <span className="text-amber-400/80 hidden sm:inline">※ ここでは、その検証サーバー処理をブラウザ内で再現。</span>
+            <strong className="block mb-0.5 text-amber-100">監査シミュレーション</strong>
+            台帳のみで再計算し、正当性を検証。<br/>
+            <span className="text-amber-400/80 hidden sm:inline">※ 検証サーバー処理をブラウザ再現。</span>
          </div>
       </div>
     );
@@ -567,12 +563,12 @@
             <section className="glass-panel rounded-xl overflow-hidden shadow-xl">
               <div className="px-4 py-3 bg-slate-900/50 border-b border-slate-800 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-sky-400" />
-                <h2 className="text-sm font-bold text-sky-100">Model Input</h2>
+                <h2 className="text-sm font-bold text-sky-100">入力 (Input)</h2>
               </div>
               
               <div className="p-4 sm:p-5 space-y-4 sm:space-y-5">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Portfolio</label>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">PF残高</label>
                   <div className="relative">
                       <input 
                       type="number" 
@@ -587,7 +583,7 @@
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Vol</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Vol(%)</label>
                     <div className="relative">
                         <input 
                         type="number" 
@@ -600,7 +596,7 @@
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Days</label>
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">期間(日)</label>
                     <div className="relative">
                         <input 
                         type="number" 
@@ -615,7 +611,7 @@
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Conf (α)</label>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">信頼区間</label>
                   <div className="flex items-center gap-3">
                       <input 
                           type="range" 
@@ -644,17 +640,17 @@
                   {appState === 'calculating' ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      Processing...
+                      計算中...
                     </>
                   ) : (
                     <>
                       <EyeOff className="w-4 h-4" />
-                      Run Blackbox
+                      計算実行 (Run)
                     </>
                   )}
                 </button>
                 <p className="text-[10px] text-slate-500 text-center mt-2">
-                    ※ 入力値はブラックボックスへ。台帳のみ生成。
+                    ※入力はブラックボックスへ。台帳のみ生成。
                 </p>
               </div>
             </section>
@@ -675,7 +671,7 @@
               <div className="px-4 sm:px-5 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
                 <div className="flex items-center gap-2">
                   <Database className="w-4 h-4 text-emerald-400" />
-                  <h2 className="text-sm font-bold text-emerald-100">Output & Ledger</h2>
+                  <h2 className="text-sm font-bold text-emerald-100">結果 & 台帳</h2>
                 </div>
                 
                 {result && (
@@ -702,7 +698,7 @@
                   {result ? (
                       <>
                           <div className="bg-slate-800/30 rounded-lg p-3 sm:p-4 border border-slate-700/50">
-                              <h3 className="text-[10px] font-bold text-slate-400 uppercase mb-1 sm:mb-2 tracking-wider">Est. VaR (99%)</h3>
+                              <h3 className="text-[10px] font-bold text-slate-400 uppercase mb-1 sm:mb-2 tracking-wider">VaR推計値</h3>
                               <div className="flex items-baseline gap-2">
                                   <div className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
                                       {result.varValue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}
@@ -716,10 +712,10 @@
                               <div className="flex items-center justify-between mb-2">
                                   <h3 className="text-xs font-bold text-slate-300 flex items-center gap-2 uppercase tracking-wide">
                                     <FileSpreadsheet size={14} />
-                                    ADIC Ledger
+                                    ADIC 台帳 (証跡)
                                   </h3>
                                   <div className="text-[9px] sm:text-[10px] text-slate-500">
-                                      外部提示用「証拠」
+                                      検証用データ
                                   </div>
                                 </div>
                                 
@@ -753,9 +749,9 @@
                                 `}
                             >
                                 {appState === 'verified' ? (
-                                    <> <CheckCircle2 size={16} /> Audit Passed </>
+                                    <> <CheckCircle2 size={16} /> 検証合格 </>
                                 ) : (
-                                    <> <ShieldCheck size={16} /> Verify Ledger </>
+                                    <> <ShieldCheck size={16} /> 台帳検証 </>
                                 )}
                             </button>
                           </div>
@@ -778,35 +774,35 @@
         <div className="mb-4">
           <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center gap-2">
             <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
-            社内モデル実装Blueprint
+            導入: 実装ブループリント
           </h3>
           <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
-            単純なVaRだけでなく、複雑な社内エンジンにも<strong>外側から被せる（Wrap）</strong>だけで適用可能。
+            既存エンジンに「記録層」を追加するだけで適用可能。
           </p>
         </div>
         
         <div className="grid md:grid-cols-3 gap-3 mb-4">
           <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
               <div className="mb-2 text-slate-500"><Layers size={18} /></div>
-              <h4 className="text-xs font-bold text-slate-200 mb-1">1. 計算ソフトに記録係を外付け</h4>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">1. 記録機能の追加</h4>
               <p className="text-[10px] text-slate-500 leading-snug">
-                今の計算ソフト（Excelやプログラム）は改造せず、計算のたびに「入力と結果」を自動でメモする仕組みを外側に付けます。
+                既存計算機の外側で、入出力を記録。
               </p>
           </div>
 
           <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
               <div className="mb-2 text-slate-500"><FileCode size={18} /></div>
-              <h4 className="text-xs font-bold text-slate-200 mb-1">2. 台帳出力</h4>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">2. 台帳生成</h4>
               <p className="text-[10px] text-slate-500 leading-snug">
-                計算過程を「操作ID・入力・結果」で記録し台帳自動生成。
+                操作と結果を台帳として出力。
               </p>
           </div>
 
           <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
               <div className="mb-2 text-slate-500"><RefreshCw size={18} /></div>
-              <h4 className="text-xs font-bold text-slate-200 mb-1">3. Verify関数</h4>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">3. 検証ツール</h4>
               <p className="text-[10px] text-slate-500 leading-snug">
-                台帳のみで再計算する軽量スクリプトを用意。これで検証完成。
+                台帳のみで再計算する軽量ツールを用意。
               </p>
           </div>
         </div>
@@ -814,15 +810,15 @@
         <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
             <div className="text-center sm:text-left">
               <div className="text-[10px] sm:text-xs font-bold text-slate-300">
-                  実装イメージ相談
+                  実装相談
               </div>
               <div className="text-[9px] sm:text-[10px] text-slate-500">
-                  「演算ステップ表（擬似コード）」からテンプレート案作成可。※コード送付不要
+                  擬似コードからテンプレート作成可。
               </div>
             </div>
             <button className="whitespace-nowrap px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] sm:text-xs font-bold rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
               <Send size={12} className="text-slate-400" />
-              テンプレート相談
+              相談する
             </button>
         </div>
       </div>
@@ -989,12 +985,12 @@
           <main className="max-w-4xl mx-auto px-4 pb-6 mt-4">
             
             {/* Accordion 1: Step 0 Principle */}
-            <AccordionSection title="原理: なぜ台帳だけで検証できる？（ミニ台帳）" icon={Calculator}>
+            <AccordionSection title="原理: ミニ台帳で仕組み理解" icon={Calculator}>
                <SimpleLogicDemo />
             </AccordionSection>
 
             {/* Accordion 2: Main Demo (Highlight) */}
-            <AccordionSection title="【実演デモ】日常業務: モデル実行 & 証跡保存" isMain={true} icon={PlayCircle} defaultOpen={false}>
+            <AccordionSection title="デモ: 計算実行 & 証跡" isMain={true} icon={PlayCircle} defaultOpen={false}>
                <MainDemo 
                  inputs={inputs} 
                  setInputs={setInputs} 
@@ -1009,7 +1005,7 @@
             </AccordionSection>
 
             {/* Accordion 3: Blueprint */}
-            <AccordionSection title="実装: 社内モデルへの適用ブループリント" icon={Settings2}>
+            <AccordionSection title="導入: 実装ブループリント" icon={Settings2}>
                <IntegrationBlueprint />
             </AccordionSection>
 
