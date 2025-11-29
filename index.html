@@ -30,8 +30,17 @@
       border: 1px solid rgba(51, 65, 85, 0.5);
     }
     
-    details > summary { list-style: none; }
-    details > summary::-webkit-details-marker { display: none; }
+    /* Accordion Animation */
+    .accordion-content {
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    .accordion-content.open {
+      max-height: 2000px; /* Enough height */
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-200 antialiased selection:bg-indigo-500/30">
@@ -75,7 +84,8 @@
     const FileArchive = (props) => <IconBase {...props}><path d="M4 22V4c0-.5.2-1 .6-1.4C5 2.2 5.5 2 6 2h12c.5 0 1 .2 1.4.6.4.4.6.9.6 1.4v18c0 .5-.2 1-.6 1.4-.4.4-.9.6-1.4.6H6c-.5 0-1-.2-1.4-.6-.4-.4-.6-.9-.6-1.4Z"/><path d="M10 2v20"/><path d="M14 2v20"/><path d="M4 10h16"/><path d="M4 14h16"/></IconBase>;
     const Calculator = (props) => <IconBase {...props}><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></IconBase>;
     const ChevronDown = (props) => <IconBase {...props}><path d="m6 9 6 6 6-6"/></IconBase>;
-    const FileWarning = (props) => <IconBase {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 9v4"/><path d="M12 17h.01"/></IconBase>;
+    const PlayCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></IconBase>;
+    const Settings2 = (props) => <IconBase {...props}><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></IconBase>;
 
 
     // ------------------------------------------
@@ -106,12 +116,70 @@
     // Components
     // ------------------------------------------
 
-    // --- Core Rules (なぜ全体が見えるか) ---
+    // --- Accordion Item Component ---
+    const AccordionSection = ({ title, children, isMain = false, icon: Icon, defaultOpen = false }) => {
+      const [isOpen, setIsOpen] = useState(defaultOpen);
+      
+      return (
+        <div className={`mb-3 rounded-xl border transition-all duration-300 overflow-hidden
+          ${isMain 
+            ? 'border-indigo-500/50 bg-indigo-900/10 shadow-lg shadow-indigo-900/20' 
+            : 'border-slate-800 bg-slate-900/40'
+          }`}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={`w-full flex items-center justify-between p-3 sm:p-4 text-left transition-colors active:bg-slate-800
+              ${isMain ? 'hover:bg-indigo-900/20' : 'hover:bg-slate-800/50'}`}
+          >
+            <div className="flex items-center gap-3">
+               <div className={`p-1.5 rounded-lg ${isMain ? 'bg-indigo-500 text-white shadow-md' : 'bg-slate-800 text-slate-400'}`}>
+                 {Icon ? <Icon size={20} /> : <Activity size={20} />}
+               </div>
+               <div>
+                 <h3 className={`text-xs sm:text-sm font-bold ${isMain ? 'text-indigo-100' : 'text-slate-200'}`}>
+                   {title}
+                 </h3>
+                 {isMain && <span className="text-[10px] text-indigo-300 font-medium block mt-0.5">※ここが本丸（Core Demo）</span>}
+               </div>
+            </div>
+            <div className={`p-1 rounded-full ${isMain ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-500'}`}>
+              <ChevronDown size={16} className={`transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            </div>
+          </button>
+          
+          <div className={`accordion-content ${isOpen ? 'open' : ''}`}>
+            <div className="p-3 sm:p-4 pt-0 border-t border-transparent">
+               <div className="pt-4 border-t border-dashed border-slate-700/50">
+                 {children}
+               </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // --- What is Finance ADIC (Definition) ---
+    const WhatIsAdic = () => (
+      <section className="max-w-4xl mx-auto px-3 sm:px-4 mt-6 mb-4">
+        <div className="p-3 sm:p-4 bg-indigo-900/20 border border-indigo-500/30 rounded-xl shadow-sm">
+          <h2 className="text-xs sm:text-sm font-bold text-indigo-200 mb-2 flex items-center gap-2">
+            <div className="w-1 h-4 sm:h-5 bg-indigo-500 rounded-full"></div>
+            Finance ADIC とは？
+          </h2>
+          <p className="text-[10px] sm:text-xs text-slate-300 leading-relaxed">
+            計算ロジック（企業秘密）を秘匿したまま、その実行プロセスを<strong>「再計算可能な台帳（Ledger）」</strong>として記録・保存する技術規格です。<br className="hidden sm:block" />
+            この台帳さえあれば、ソースコードを開示することなく、第三者がいつでも「計算の正当性」だけを100%証明できるようになります。
+          </p>
+        </div>
+      </section>
+    );
+
+    // --- Core Rules (なぜ見えるか) ---
     const CoreRules = () => (
       <div className="glass-panel p-3 mb-4 rounded-lg border-l-4 border-emerald-500">
         <h3 className="text-xs font-bold text-emerald-300 mb-1 flex items-center gap-1.5">
           <ShieldCheck size={14} />
-          なぜ「台帳だけで全体」と言い切れる？
+          なぜ「台帳だけで証明」になる？
         </h3>
         <div className="text-[10px] sm:text-xs text-slate-300 space-y-1">
           <p>このシステムは<strong className="text-white">3つの鉄則（仕様）</strong>で定義されます。</p>
@@ -125,45 +193,6 @@
           </p>
         </div>
       </div>
-    );
-
-    // --- Detection Examples (New: どんな穴が見えるか) ---
-    const DetectionExamples = () => (
-      <section className="mt-6 border-t border-slate-800 pt-4">
-        <h3 className="text-xs sm:text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
-          <span className="bg-rose-500 w-1 h-3 rounded-full"></span>
-          台帳で検知できる「穴」の例
-        </h3>
-        <div className="grid grid-cols-3 gap-2">
-          <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
-            <div className="text-[10px] font-bold text-rose-300 mb-1 flex items-center gap-1">
-                <FileWarning size={10} /> 改ざん・抜け
-            </div>
-            <div className="text-[9px] text-slate-500 leading-tight">
-              「√計算」を飛ばした？<br/>
-              → <span className="text-slate-300">行の欠落</span>として即検知。
-            </div>
-          </div>
-          <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
-            <div className="text-[10px] font-bold text-rose-300 mb-1 flex items-center gap-1">
-                <FileWarning size={10} /> カバレッジ
-            </div>
-            <div className="text-[9px] text-slate-500 leading-tight">
-              特定銘柄が漏れてる？<br/>
-              → ID一覧の<span className="text-slate-300">未出現</span>で発覚。
-            </div>
-          </div>
-          <div className="bg-slate-900/50 p-2 rounded border border-slate-800">
-            <div className="text-[10px] font-bold text-rose-300 mb-1 flex items-center gap-1">
-                <FileWarning size={10} /> 隠れ変更
-            </div>
-            <div className="text-[9px] text-slate-500 leading-tight">
-              係数をこっそり変えた？<br/>
-              → 台帳Diffで<span className="text-slate-300">値のズレ</span>が露見。
-            </div>
-          </div>
-        </div>
-      </section>
     );
 
     // --- Target Audience Section ---
@@ -217,11 +246,11 @@
       const [isOpen, setIsOpen] = useState(false);
 
       return (
-        <section className="mx-2 sm:mx-0 mt-4 mb-6">
+        <section className="mx-1 sm:mx-0 mt-2">
           
           <CoreRules />
 
-          <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 shadow-xl relative overflow-hidden">
+          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 sm:p-4 shadow-inner relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5">
                <Calculator size={80} />
             </div>
@@ -229,7 +258,7 @@
             <div className="relative z-10">
               <h2 className="text-sm sm:text-base font-bold text-slate-100 mb-2 flex items-center gap-2">
                 <span className="w-1 h-4 bg-amber-500 rounded-full"></span>
-                台帳だけで検証できる？（ミニ台帳で体験）
+                ミニ台帳で体験
               </h2>
               <p className="text-[11px] sm:text-xs text-slate-400 mb-3 max-w-2xl leading-relaxed">
                 VaRも分解すれば四則演算。まずは<strong>「超単純リスク計算」</strong>で仕組みを直感理解。
@@ -277,69 +306,72 @@
                 </div>
               </div>
 
-              <div className="mt-3">
-                <button 
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 px-3 py-2 rounded-lg border border-slate-700/50 w-full"
-                >
-                  <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                  なぜこれで「穴が残り得ない」と言える？（解説）
-                </button>
-                
-                {isOpen && (
-                  <div className="mt-2 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 text-[10px] sm:text-xs text-slate-300 leading-relaxed animate-in fade-in slide-in-from-top-1">
-                    <p className="mb-2">
-                        ここでは P=1,000万・r=5%(=1/20) だけを使う<strong>超単純モデル</strong>で、
-                        「正しい台帳」と「壊れた台帳」がどう見えるかを確認します。
-                    </p>
+              <div className="mt-3 flex flex-col gap-2">
+                {/* Accordion: Why Safe? */}
+                <div>
+                  <button 
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-300 hover:text-white bg-slate-800/50 hover:bg-slate-800 px-3 py-2 rounded-lg border border-slate-700/50 w-full text-left transition-colors"
+                  >
+                    <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                    なぜこれで「穴が残り得ない」と言える？（解説）
+                  </button>
+                  
+                  {isOpen && (
+                    <div className="mt-2 p-3 bg-slate-800/30 rounded-lg border border-slate-700/30 text-[10px] sm:text-xs text-slate-300 leading-relaxed animate-in fade-in slide-in-from-top-1">
+                      <p className="mb-2">
+                          ここでは P=1,000万・r=5%(=1/20) だけを使う<strong>超単純モデル</strong>で、
+                          「正しい台帳」と「壊れた台帳」がどう見えるかを確認します。
+                      </p>
 
-                    <ol className="list-decimal list-inside space-y-2 ml-1 text-slate-400 mb-4">
-                        <li>
-                        <span className="font-bold text-emerald-300">正常ケース</span><br />
-                        Step1: r = <span className="font-mono text-emerald-400">1/20</span><br />
-                        Step2: L = P×r = 10,000,000×1/20 ={" "}
-                        <span className="font-mono text-emerald-400">500,000/1</span><br />
-                        <span className="text-slate-500">検証者は台帳どおりに電卓で再計算するだけで、一致を確認できます。</span>
-                        </li>
+                      <ol className="list-decimal list-inside space-y-2 ml-1 text-slate-400 mb-4">
+                          <li>
+                          <span className="font-bold text-emerald-300">正常ケース</span><br />
+                          Step1: r = <span className="font-mono text-emerald-400">1/20</span><br />
+                          Step2: L = P×r = 10,000,000×1/20 ={" "}
+                          <span className="font-mono text-emerald-400">500,000/1</span><br />
+                          <span className="text-slate-500">検証者は台帳どおりに電卓で再計算するだけで、一致を確認できます。</span>
+                          </li>
 
-                        <li>
-                        <span className="font-bold text-rose-300">係数をいじった穴（改ざん）</span><br />
-                        誰かが r 行だけ <span className="font-mono">1/25</span> に書き換え、
-                        L 行は 500,000/1 のまま提出したとします。<br />
-                        検証者は 10,000,000×1/25=400,000 を再計算 →{" "}
-                        <span className="font-mono text-rose-400">台帳の 500,000/1 と絶対に一致しません</span>。<br />
-                        <strong>台帳だけ</strong>を見ていても、この矛盾は必ず露出します。
-                        </li>
+                          <li>
+                          <span className="font-bold text-rose-300">係数をいじった穴（改ざん）</span><br />
+                          誰かが r 行だけ <span className="font-mono">1/25</span> に書き換え、
+                          L 行は 500,000/1 のまま提出したとします。<br />
+                          検証者は 10,000,000×1/25=400,000 を再計算 →{" "}
+                          <span className="font-mono text-rose-400">台帳の 500,000/1 と絶対に一致しません</span>。<br />
+                          <strong>台帳だけ</strong>を見ていても、この矛盾は必ず露出します。
+                          </li>
 
-                        <li>
-                        <span className="font-bold text-rose-300">ステップ抜けの穴</span><br />
-                        Step2（LOSS 行）を丸ごと削って台帳を出した場合、L がいくつで算出されたかを示す行が一切ありません。<br />
-                        このルールでは「台帳に存在しない値は、最終出力として認めない」ので、
-                        <span className="text-rose-300"> L をごまかして提出すること自体ができません</span>。
-                        </li>
-                    </ol>
+                          <li>
+                          <span className="font-bold text-rose-300">ステップ抜けの穴</span><br />
+                          Step2（LOSS 行）を丸ごと削って台帳を出した場合、L がいくつで算出されたかを示す行が一切ありません。<br />
+                          このルールでは「台帳に存在しない値は、最終出力として認めない」ので、
+                          <span className="text-rose-300"> L をごまかして提出すること自体ができません</span>。
+                          </li>
+                      </ol>
 
-                    <div className="mt-3 pt-3 border-t border-slate-700/30 text-[9px] sm:text-[10px] text-slate-400 leading-relaxed bg-indigo-900/10 p-3 rounded-lg border border-indigo-500/10">
-                        <strong className="text-indigo-300 flex items-center gap-1.5 mb-1">
-                           <Sigma size={12} /> Why This Works? (技術的背景)
-                        </strong>
-                        <div className="mb-2">
-                            従来のシステムでは「浮動小数点の誤差（計算するPCによって微細なズレが出る）」という壁があり、数年後の完全な再計算は不可能でした。<br/>
-                            Finance ADIC は、全ての計算を<strong>「有理数（整数比）」</strong>で固定する独自技術により、この壁を突破。いつどこで誰が計算しても、1ビットもズレない完全な再現性を保証します。
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2 mt-3">
-                            <span className="text-slate-500 self-center sm:self-auto">Deep Dive (Theory):</span>
-                            <a href="https://ghostdrifttheory.github.io/prime-counter-demo-en/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline flex items-center gap-1">
-                                素数計算OS <ExternalLink size={8} />
-                            </a>
-                            <span className="hidden sm:inline text-slate-600">|</span>
-                            <a href="https://ghostdrifttheory.github.io/Prime-Calculation-OS-Mathematical-Lab/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline flex items-center gap-1">
-                                数理ラボ <ExternalLink size={8} />
-                            </a>
-                        </div>
+                      <div className="mt-3 pt-3 border-t border-slate-700/30 text-[9px] sm:text-[10px] text-slate-400 leading-relaxed bg-indigo-900/10 p-3 rounded-lg border border-indigo-500/10">
+                          <strong className="text-indigo-300 flex items-center gap-1.5 mb-1">
+                             <Sigma size={12} /> Why This Works? (技術的背景)
+                          </strong>
+                          <div className="mb-2">
+                              従来のシステムでは「浮動小数点の誤差（計算するPCによって微細なズレが出る）」という壁があり、数年後の完全な再計算は不可能でした。<br/>
+                              Finance ADIC は、全ての計算を<strong>「有理数（整数比）」</strong>で固定する独自技術により、この壁を突破。いつどこで誰が計算しても、1ビットもズレない完全な再現性を保証します。
+                          </div>
+                          <div className="flex flex-col sm:flex-row gap-2 mt-3">
+                              <span className="text-slate-500 self-center sm:self-auto">Deep Dive (Theory):</span>
+                              <a href="https://ghostdrifttheory.github.io/prime-counter-demo-en/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline flex items-center gap-1">
+                                  素数計算OS <ExternalLink size={8} />
+                              </a>
+                              <span className="hidden sm:inline text-slate-600">|</span>
+                              <a href="https://ghostdrifttheory.github.io/Prime-Calculation-OS-Mathematical-Lab/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 underline flex items-center gap-1">
+                                  数理ラボ <ExternalLink size={8} />
+                              </a>
+                          </div>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -389,186 +421,283 @@
       );
     };
 
-    const DistributionChart = ({ varValue, portfolio, alpha }) => {
-      const width = 300;
-      const height = 120;
-      const points = [];
-      for (let i = -3.5; i <= 3.5; i += 0.1) {
-        const x = (i + 3.5) / 7 * width;
-        const y = height - (Math.exp(-(i * i) / 2) / Math.sqrt(2 * Math.PI)) * (height * 0.8) - 10;
-        points.push(`${x},${y}`);
-      }
-      const z = zForAlpha(alpha);
-      const rawVarX = ((-z + 3.5) / 7) * width;
-      const labelX = Math.min(width - 50, Math.max(0, rawVarX - 25));
-      const alphaPercent = (alpha * 100).toFixed(1);
+    // --- Main Demo Component ---
+    const MainDemo = ({ inputs, setInputs, appState, runModel, ledger, result, verifyLedger, verifyProgress }) => {
+      const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputs(prev => ({ ...prev, [name]: value }));
+      };
+      const isInputValid = inputs.portfolio > 0 && inputs.days > 0 && inputs.alpha > 0.5;
 
       return (
-        <div className="relative w-full h-24 sm:h-32 bg-slate-900/50 rounded-lg border border-slate-700/50 overflow-hidden flex items-center justify-center select-none">
-          <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} className="opacity-80">
-            <path d={`M0,${height} ${points.join(' ')} L${width},${height} Z`} fill="url(#grad)" />
-            <path d={`M0,${height} ${points.join(' ')}`} fill="none" stroke="#38bdf8" strokeWidth="2" />
-            <line x1={rawVarX} y1="10" x2={rawVarX} y2={height} stroke="#f43f5e" strokeWidth="2" strokeDasharray="4 2" />
-            <defs>
-              <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div 
-            className="absolute text-[10px] text-rose-400 font-bold bg-slate-900/90 px-1.5 py-0.5 rounded border border-rose-500/30 whitespace-nowrap shadow-lg z-10"
-            style={{ left: labelX, top: 10 }}
-          >
-            VaR ({alphaPercent}%)
+        <>
+        <StoryGuide appState={appState} hasResult={!!result} />
+        
+        <div className="grid lg:grid-cols-12 gap-4 sm:gap-6">
+          {/* Input Column */}
+          <div className="lg:col-span-5 space-y-6">
+            <section className="glass-panel rounded-xl overflow-hidden shadow-xl">
+              <div className="px-4 py-3 bg-slate-900/50 border-b border-slate-800 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-sky-400" />
+                <h2 className="text-sm font-bold text-sky-100">Model Input</h2>
+              </div>
+              
+              <div className="p-4 sm:p-5 space-y-4 sm:space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Portfolio</label>
+                  <div className="relative">
+                      <input 
+                      type="number" 
+                      name="portfolio"
+                      value={inputs.portfolio}
+                      onChange={handleInputChange}
+                      className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none transition font-mono text-sm"
+                    />
+                    <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">$</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Vol</label>
+                    <div className="relative">
+                        <input 
+                        type="number" 
+                        name="volPct"
+                        value={inputs.volPct}
+                        onChange={handleInputChange}
+                        className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none font-mono text-sm"
+                        />
+                        <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">%</div>
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Days</label>
+                    <div className="relative">
+                        <input 
+                        type="number" 
+                        name="days"
+                        value={inputs.days}
+                        onChange={handleInputChange}
+                        className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none font-mono text-sm"
+                        />
+                          <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">Days</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Conf (α)</label>
+                  <div className="flex items-center gap-3">
+                      <input 
+                          type="range" 
+                          min="0.90" max="0.999" step="0.001"
+                          name="alpha"
+                          value={inputs.alpha}
+                          onChange={handleInputChange}
+                          className="flex-1 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                      />
+                      <span className="w-16 text-right text-sm font-mono text-indigo-400">{(inputs.alpha*100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 py-4 bg-slate-900/30 border-t border-slate-800">
+                  <button
+                  onClick={runModel}
+                  disabled={!isInputValid || appState === 'calculating'}
+                  className={`
+                    w-full flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-lg active:scale-[0.98]
+                    ${isInputValid 
+                      ? 'bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white shadow-sky-900/20' 
+                      : 'bg-slate-800 text-slate-500 cursor-not-allowed'}
+                  `}
+                >
+                  {appState === 'calculating' ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="w-4 h-4" />
+                      Run Blackbox
+                    </>
+                  )}
+                </button>
+                <p className="text-[10px] text-slate-500 text-center mt-2">
+                    ※ 入力値はブラックボックスへ。台帳のみ生成。
+                </p>
+              </div>
+            </section>
+          </div>
+
+          {/* Output Column */}
+          <div className="lg:col-span-7 space-y-6">
+            <section className="glass-panel rounded-xl overflow-hidden min-h-[350px] sm:min-h-[400px] flex flex-col shadow-xl relative">
+              
+              {appState === 'idle' && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-slate-950/60 backdrop-blur-[2px] z-10 p-6 text-center">
+                    <Cpu size={48} className="mb-4 opacity-30" />
+                    <h3 className="text-sm font-bold text-slate-300 mb-2">Awaiting Input</h3>
+                    <p className="text-xs">左パネルで実行してください。</p>
+                  </div>
+              )}
+
+              <div className="px-4 sm:px-5 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                <div className="flex items-center gap-2">
+                  <Database className="w-4 h-4 text-emerald-400" />
+                  <h2 className="text-sm font-bold text-emerald-100">Output & Ledger</h2>
+                </div>
+                
+                {result && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-400 hidden sm:inline">Status:</span>
+                    {appState === 'verified' ? (
+                        <span className="text-emerald-400 font-bold flex items-center gap-1 text-[10px] px-2 py-0.5 bg-emerald-900/30 rounded border border-emerald-500/30 uppercase tracking-wider">
+                            <ShieldCheck size={12} /> Verified
+                        </span>
+                    ) : appState === 'verifying' ? (
+                        <span className="text-amber-400 font-bold text-[10px] uppercase tracking-wider animate-pulse">
+                            Verifying...
+                        </span>
+                    ) : (
+                        <span className="text-slate-500 text-[10px] uppercase tracking-wider">
+                            Unverified
+                        </span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 p-3 sm:p-5 space-y-4 sm:space-y-6">
+                  {result ? (
+                      <>
+                          <div className="bg-slate-800/30 rounded-lg p-3 sm:p-4 border border-slate-700/50">
+                              <h3 className="text-[10px] font-bold text-slate-400 uppercase mb-1 sm:mb-2 tracking-wider">Est. VaR (99%)</h3>
+                              <div className="flex items-baseline gap-2">
+                                  <div className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
+                                      {result.varValue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}
+                                  </div>
+                              </div>
+                          </div>
+
+                          <DistributionChart varValue={result.varValue} portfolio={inputs.portfolio} alpha={inputs.alpha} />
+
+                          <div className="border-t border-slate-800 pt-4">
+                              <div className="flex items-center justify-between mb-2">
+                                  <h3 className="text-xs font-bold text-slate-300 flex items-center gap-2 uppercase tracking-wide">
+                                    <FileSpreadsheet size={14} />
+                                    ADIC Ledger
+                                  </h3>
+                                  <div className="text-[9px] sm:text-[10px] text-slate-500">
+                                    外部提示用「証拠」
+                                  </div>
+                              </div>
+                              
+                              <div className="bg-slate-950/50 rounded border border-slate-800 h-40 sm:h-48 overflow-y-auto p-1 scrollbar-thin">
+                                  {ledger.map((item, idx) => {
+                                      let rowState = 'idle';
+                                      if (appState === 'verifying') {
+                                          if (idx < verifyProgress) rowState = 'ok';
+                                          else if (idx === verifyProgress) rowState = 'checking';
+                                      } else if (appState === 'verified') {
+                                          rowState = 'ok';
+                                      }
+                                      return <LedgerRow key={item.id} item={item} verifyState={rowState} />;
+                                  })}
+                              </div>
+                          </div>
+
+                          <div>
+                            {appState === 'ready' && <VerifySimulationExplainer />}
+                            <button
+                                onClick={verifyLedger}
+                                disabled={appState !== 'ready' && appState !== 'verified'}
+                                className={`
+                                    w-full py-3 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl
+                                    ${appState === 'verified' 
+                                        ? 'bg-emerald-500/10 border border-emerald-500/50 text-emerald-400 cursor-default'
+                                        : appState === 'verifying'
+                                        ? 'bg-amber-500/10 border border-amber-500/50 text-amber-400 cursor-wait'
+                                        : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/30'
+                                    }
+                                `}
+                            >
+                                {appState === 'verified' ? (
+                                    <> <CheckCircle2 size={16} /> Audit Passed </>
+                                ) : (
+                                    <> <ShieldCheck size={16} /> Verify Ledger </>
+                                )}
+                            </button>
+                          </div>
+                      </>
+                  ) : null}
+              </div>
+            </section>
+            
+            {result && <BusinessValueCard />}
+            
           </div>
         </div>
+        </>
       );
     };
 
-    const LedgerRow = ({ item, isVerifying, verifyState }) => {
-      const isTarget = verifyState === 'checking';
-      const isDone = verifyState === 'ok' || verifyState === 'ng';
-      
-      let opNameJP = item.op;
-      if(item.op === "Z_Score") opNameJP = "Z-Score";
-      if(item.op === "Vol_Scale") opNameJP = "Vol Adjust";
-      if(item.op === "Time_Scale") opNameJP = "Time Scale";
-      if(item.op === "Base_Risk") opNameJP = "Base Risk";
-      if(item.op === "VaR_Calc") opNameJP = "Final VaR";
-
-      return (
-        <div className={`
-          group flex items-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded border-b border-slate-800/50 text-xs transition-all duration-300 font-mono
-          ${isTarget ? 'bg-emerald-900/20 border-emerald-500/50 pl-2 sm:pl-4' : ''}
-          ${isDone && item.ok ? 'bg-slate-900/30' : ''}
-          ${isDone && !item.ok ? 'bg-rose-900/20' : ''}
-        `}>
-          <div className="w-4 sm:w-5 text-slate-500 text-center text-[9px] sm:text-[10px]">{item.id}</div>
-          
-          <div className="w-12 sm:w-14 text-[8px] sm:text-[9px] text-sky-500/80 font-bold tracking-tighter uppercase border border-sky-500/20 rounded px-0.5 sm:px-1 py-0.5 bg-sky-900/10 text-center">
-            {item.code.replace('OP_', '')}
-          </div>
-
-          <div className="flex-1 overflow-hidden pl-1 sm:pl-2">
-            <div className="flex items-center gap-2 text-slate-300 mb-0.5">
-              <span className="truncate text-[10px] sm:text-[11px]">{opNameJP}</span>
-            </div>
-            <div className="hidden sm:block text-slate-500 truncate text-[9px]">
-               IN: {JSON.stringify(item.inputs).replace(/"/g, '').replace(/,/g, ', ')}
-            </div>
-          </div>
-          
-          <div className="text-right w-16 sm:w-24">
-            <div className="text-emerald-400 truncate tracking-tight text-[10px] sm:text-xs">{item.rationalStr}</div>
-            <div className="text-[8px] sm:text-[9px] text-slate-600 hidden sm:block">Rational</div>
-          </div>
-
-          <div className="w-6 sm:w-8 flex justify-center">
-            {isDone ? (
-              item.ok ? <CheckCircle2 size={12} className="text-emerald-400" /> : <AlertTriangle size={12} className="text-rose-500" />
-            ) : (
-              <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full border-2 border-slate-700 ${isTarget ? 'animate-spin border-t-emerald-400' : ''}`} />
-            )}
-          </div>
-        </div>
-      );
-    };
-
-    // --- Business Value Card ---
-    const BusinessValueCard = () => (
-      <div className="mb-4 bg-slate-900/60 border border-slate-800 rounded-lg p-3 flex gap-2 sm:gap-3 items-start shadow-sm">
-        <div className="p-1 sm:p-1.5 bg-blue-500/10 rounded border border-blue-500/20 mt-0.5 shrink-0">
-          <Briefcase size={12} className="text-blue-400" />
-        </div>
-        <div className="space-y-1 w-full">
-          <h3 className="text-[10px] sm:text-xs font-bold text-slate-200">
-            VALUE PROP
-          </h3>
-          <div className="text-[10px] sm:text-xs text-slate-400 leading-snug mt-1 grid gap-2">
-            <div>
-              <span className="text-rose-400 font-bold">AS-IS:</span> 
-              3年後の監査や外部委託時、モデル（Excel/コード）が無いと検証不能。責任曖昧。
-            </div>
-            <div className="border-t border-slate-700/50 pt-2 mt-1">
-              <span className="text-emerald-400 font-bold block mb-0.5">TO-BE:</span> 
-              <strong className="text-slate-200">「PDF＋台帳＋Verify」</strong>の3点で、モデル無しでもどこでも検証再現。3年後でも客観証明。
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-
-    // --- Verify Button Explainer ---
-    const VerifySimulationExplainer = () => (
-      <div className="mb-3 px-3 py-2 bg-amber-900/20 border border-amber-500/20 rounded-lg text-amber-200/80 text-[10px] leading-relaxed flex gap-2">
-         <MonitorCheck size={14} className="shrink-0 mt-0.5" />
-         <div>
-            <strong className="block mb-0.5 text-amber-100">3年後の監査シミュレーション</strong>
-            3年前の「レシート（台帳）」だけを取り出し、モデルコード無しで再計算。<br/>
-            <span className="text-amber-400/80 hidden sm:inline">※ ここでは、その検証サーバー処理をブラウザ内で再現。</span>
-         </div>
-      </div>
-    );
-
-    // --- Integration Blueprint (Condensed) ---
+    // --- Integration Blueprint ---
     const IntegrationBlueprint = () => (
-      <section className="mt-6 border-t border-slate-800 bg-slate-900/30 pt-6 pb-8">
-        <div className="max-w-4xl mx-auto px-4">
-          
-          <div className="mb-4">
-            <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center gap-2">
-              <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
-              社内モデル実装Blueprint
-            </h3>
-            <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
-              単純なVaRだけでなく、複雑な社内エンジンにも<strong>外側から被せる（Wrap）</strong>だけで適用可能。
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-3 mb-4">
-            <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
-               <div className="mb-2 text-slate-500"><Layers size={18} /></div>
-               <h4 className="text-xs font-bold text-slate-200 mb-1">1. 計算ソフトに記録係を外付け</h4>
-               <p className="text-[10px] text-slate-500 leading-snug">
-                 今の計算ソフト（Excelやプログラム）は改造せず、計算のたびに「入力と結果」を自動でメモする仕組みを外側に付けます。
-               </p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
-               <div className="mb-2 text-slate-500"><FileCode size={18} /></div>
-               <h4 className="text-xs font-bold text-slate-200 mb-1">2. 台帳出力</h4>
-               <p className="text-[10px] text-slate-500 leading-snug">
-                 計算過程を「操作ID・入力・結果」で記録し台帳自動生成。
-               </p>
-            </div>
-
-            <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
-               <div className="mb-2 text-slate-500"><RefreshCw size={18} /></div>
-               <h4 className="text-xs font-bold text-slate-200 mb-1">3. Verify関数</h4>
-               <p className="text-[10px] text-slate-500 leading-snug">
-                 台帳のみで再計算する軽量スクリプトを用意。これで検証完成。
-               </p>
-            </div>
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-             <div className="text-center sm:text-left">
-                <div className="text-[10px] sm:text-xs font-bold text-slate-300">
-                   実装イメージ相談
-                </div>
-                <div className="text-[9px] sm:text-[10px] text-slate-500">
-                   「演算ステップ表（擬似コード）」からテンプレート案作成可。※コード送付不要
-                </div>
-             </div>
-             <button className="whitespace-nowrap px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] sm:text-xs font-bold rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
-                <Send size={12} className="text-slate-400" />
-                テンプレート相談
-             </button>
-          </div>
-
+      <div className="pt-2 pb-4">
+        <div className="mb-4">
+          <h3 className="text-sm font-bold text-slate-200 mb-1 flex items-center gap-2">
+            <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+            社内モデル実装Blueprint
+          </h3>
+          <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
+            単純なVaRだけでなく、複雑な社内エンジンにも<strong>外側から被せる（Wrap）</strong>だけで適用可能。
+          </p>
         </div>
-      </section>
+        
+        <div className="grid md:grid-cols-3 gap-3 mb-4">
+          <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
+              <div className="mb-2 text-slate-500"><Layers size={18} /></div>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">1. 計算ソフトに記録係を外付け</h4>
+              <p className="text-[10px] text-slate-500 leading-snug">
+                今の計算ソフト（Excelやプログラム）は改造せず、計算のたびに「入力と結果」を自動でメモする仕組みを外側に付けます。
+              </p>
+          </div>
+
+          <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
+              <div className="mb-2 text-slate-500"><FileCode size={18} /></div>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">2. 台帳出力</h4>
+              <p className="text-[10px] text-slate-500 leading-snug">
+                計算過程を「操作ID・入力・結果」で記録し台帳自動生成。
+              </p>
+          </div>
+
+          <div className="bg-slate-950 border border-slate-800 rounded-lg p-3">
+              <div className="mb-2 text-slate-500"><RefreshCw size={18} /></div>
+              <h4 className="text-xs font-bold text-slate-200 mb-1">3. Verify関数</h4>
+              <p className="text-[10px] text-slate-500 leading-snug">
+                台帳のみで再計算する軽量スクリプトを用意。これで検証完成。
+              </p>
+          </div>
+        </div>
+
+        <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+            <div className="text-center sm:text-left">
+              <div className="text-[10px] sm:text-xs font-bold text-slate-300">
+                  実装イメージ相談
+              </div>
+              <div className="text-[9px] sm:text-[10px] text-slate-500">
+                  「演算ステップ表（擬似コード）」からテンプレート案作成可。※コード送付不要
+              </div>
+            </div>
+            <button className="whitespace-nowrap px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[10px] sm:text-xs font-bold rounded-lg transition-colors flex items-center gap-2 cursor-pointer">
+              <Send size={12} className="text-slate-400" />
+              テンプレート相談
+            </button>
+        </div>
+      </div>
     );
 
     // ------------------------------------------
@@ -586,17 +715,6 @@
       const [ledger, setLedger] = useState([]);
       const [result, setResult] = useState(null);
       const [verifyProgress, setVerifyProgress] = useState(-1);
-
-      const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setInputs(prev => ({ ...prev, [name]: value }));
-        if (appState !== 'idle') {
-          setAppState('idle');
-          setLedger([]);
-          setResult(null);
-          setVerifyProgress(-1);
-        }
-      };
 
       const runModel = () => {
         setAppState('calculating');
@@ -702,8 +820,6 @@
         }, 200);
       };
 
-      const isInputValid = inputs.portfolio > 0 && inputs.days > 0 && inputs.alpha > 0.5;
-
       return (
         <div className="min-h-screen bg-slate-950 text-slate-200 font-sans pb-10">
           
@@ -726,227 +842,37 @@
             </div>
           </header>
 
-          {/* NEW: Target Audience Section */}
+          {/* Target Audience Section */}
           <TargetAudienceSection />
+          
+          {/* What is ADIC Section */}
+          <WhatIsAdic />
 
           <main className="max-w-4xl mx-auto px-4 pb-6 mt-4">
             
-            {/* NEW: Simple Logic Demo (ミニ台帳) */}
-            <SimpleLogicDemo />
+            {/* Accordion 1: Step 0 Principle */}
+            <AccordionSection title="原理: なぜ台帳だけで検証できる？（ミニ台帳）" icon={Calculator}>
+               <SimpleLogicDemo />
+            </AccordionSection>
 
-            {/* Story Guide (Status) */}
-            <StoryGuide appState={appState} hasResult={!!result} />
+            {/* Accordion 2: Main Demo (Highlight) */}
+            <AccordionSection title="【実演デモ】日常業務: モデル実行 & 証跡保存" isMain={true} icon={PlayCircle} defaultOpen={false}>
+               <MainDemo 
+                 inputs={inputs} 
+                 setInputs={setInputs} 
+                 appState={appState} 
+                 runModel={runModel} 
+                 ledger={ledger} 
+                 result={result} 
+                 verifyLedger={verifyLedger}
+                 verifyProgress={verifyProgress}
+               />
+            </AccordionSection>
 
-            <div className="grid lg:grid-cols-12 gap-4 sm:gap-6">
-              
-              {/* Left Column: Input */}
-              <div className="lg:col-span-5 space-y-6">
-                <section className="glass-panel rounded-xl overflow-hidden shadow-xl">
-                  <div className="px-4 py-3 bg-slate-900/50 border-b border-slate-800 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-sky-400" />
-                    <h2 className="text-sm font-bold text-sky-100">Model Input</h2>
-                  </div>
-                  
-                  <div className="p-4 sm:p-5 space-y-4 sm:space-y-5">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Portfolio</label>
-                      <div className="relative">
-                         <input 
-                          type="number" 
-                          name="portfolio"
-                          value={inputs.portfolio}
-                          onChange={handleInputChange}
-                          className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none transition font-mono text-sm"
-                        />
-                        <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">$</div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Vol</label>
-                        <div className="relative">
-                            <input 
-                            type="number" 
-                            name="volPct"
-                            value={inputs.volPct}
-                            onChange={handleInputChange}
-                            className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none font-mono text-sm"
-                            />
-                            <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">%</div>
-                        </div>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Days</label>
-                        <div className="relative">
-                            <input 
-                            type="number" 
-                            name="days"
-                            value={inputs.days}
-                            onChange={handleInputChange}
-                            className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white focus:ring-1 focus:ring-indigo-500 outline-none font-mono text-sm"
-                            />
-                             <div className="absolute right-3 top-2 text-xs text-slate-500 pointer-events-none">Days</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Conf (α)</label>
-                      <div className="flex items-center gap-3">
-                          <input 
-                              type="range" 
-                              min="0.90" max="0.999" step="0.001"
-                              name="alpha"
-                              value={inputs.alpha}
-                              onChange={handleInputChange}
-                              className="flex-1 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-                          />
-                          <span className="w-16 text-right text-sm font-mono text-indigo-400">{(inputs.alpha*100).toFixed(1)}%</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="px-4 py-4 bg-slate-900/30 border-t border-slate-800">
-                     <button
-                      onClick={runModel}
-                      disabled={!isInputValid || appState === 'calculating'}
-                      className={`
-                        w-full flex items-center justify-center gap-2 py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-lg active:scale-[0.98]
-                        ${isInputValid 
-                          ? 'bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white shadow-sky-900/20' 
-                          : 'bg-slate-800 text-slate-500 cursor-not-allowed'}
-                      `}
-                    >
-                      {appState === 'calculating' ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <EyeOff className="w-4 h-4" />
-                          Run Blackbox
-                        </>
-                      )}
-                    </button>
-                    <p className="text-[10px] text-slate-500 text-center mt-2">
-                        ※ 入力値はブラックボックスへ。台帳のみ生成。
-                    </p>
-                  </div>
-                </section>
-              </div>
-
-              {/* Right Column: Output */}
-              <div className="lg:col-span-7 space-y-6">
-                <section className="glass-panel rounded-xl overflow-hidden min-h-[350px] sm:min-h-[400px] flex flex-col shadow-xl relative">
-                  
-                  {appState === 'idle' && (
-                     <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-slate-950/60 backdrop-blur-[2px] z-10 p-6 text-center">
-                       <Cpu size={48} className="mb-4 opacity-30" />
-                       <h3 className="text-sm font-bold text-slate-300 mb-2">Awaiting Input</h3>
-                       <p className="text-xs">左パネルで実行してください。</p>
-                     </div>
-                  )}
-
-                  <div className="px-4 sm:px-5 py-3 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
-                    <div className="flex items-center gap-2">
-                      <Database className="w-4 h-4 text-emerald-400" />
-                      <h2 className="text-sm font-bold text-emerald-100">Output & Ledger</h2>
-                    </div>
-                    
-                    {result && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-400 hidden sm:inline">Status:</span>
-                        {appState === 'verified' ? (
-                            <span className="text-emerald-400 font-bold flex items-center gap-1 text-[10px] px-2 py-0.5 bg-emerald-900/30 rounded border border-emerald-500/30 uppercase tracking-wider">
-                                <ShieldCheck size={12} /> Verified
-                            </span>
-                        ) : appState === 'verifying' ? (
-                            <span className="text-amber-400 font-bold text-[10px] uppercase tracking-wider animate-pulse">
-                                Verifying...
-                            </span>
-                        ) : (
-                            <span className="text-slate-500 text-[10px] uppercase tracking-wider">
-                                Unverified
-                            </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 p-3 sm:p-5 space-y-4 sm:space-y-6">
-                      {result ? (
-                          <>
-                              <div className="bg-slate-800/30 rounded-lg p-3 sm:p-4 border border-slate-700/50">
-                                  <h3 className="text-[10px] font-bold text-slate-400 uppercase mb-1 sm:mb-2 tracking-wider">Est. VaR (99%)</h3>
-                                  <div className="flex items-baseline gap-2">
-                                      <div className="text-2xl sm:text-3xl font-mono font-bold text-white tracking-tight">
-                                          {result.varValue.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}
-                                      </div>
-                                  </div>
-                              </div>
-
-                              <DistributionChart varValue={result.varValue} portfolio={inputs.portfolio} alpha={inputs.alpha} />
-
-                              <div className="border-t border-slate-800 pt-4">
-                                  <div className="flex items-center justify-between mb-2">
-                                     <h3 className="text-xs font-bold text-slate-300 flex items-center gap-2 uppercase tracking-wide">
-                                        <FileSpreadsheet size={14} />
-                                        ADIC Ledger
-                                     </h3>
-                                     <div className="text-[9px] sm:text-[10px] text-slate-500">
-                                        外部提示用「証拠」
-                                     </div>
-                                  </div>
-                                  
-                                  <div className="bg-slate-950/50 rounded border border-slate-800 h-40 sm:h-48 overflow-y-auto p-1 scrollbar-thin">
-                                      {ledger.map((item, idx) => {
-                                          let rowState = 'idle';
-                                          if (appState === 'verifying') {
-                                              if (idx < verifyProgress) rowState = 'ok';
-                                              else if (idx === verifyProgress) rowState = 'checking';
-                                          } else if (appState === 'verified') {
-                                              rowState = 'ok';
-                                          }
-                                          return <LedgerRow key={item.id} item={item} verifyState={rowState} />;
-                                      })}
-                                  </div>
-                              </div>
-
-                              <div>
-                                {appState === 'ready' && <VerifySimulationExplainer />}
-                                <button
-                                    onClick={verifyLedger}
-                                    disabled={appState !== 'ready' && appState !== 'verified'}
-                                    className={`
-                                        w-full py-3 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-xl
-                                        ${appState === 'verified' 
-                                            ? 'bg-emerald-500/10 border border-emerald-500/50 text-emerald-400 cursor-default'
-                                            : appState === 'verifying'
-                                            ? 'bg-amber-500/10 border border-amber-500/50 text-amber-400 cursor-wait'
-                                            : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/30'
-                                        }
-                                    `}
-                                >
-                                    {appState === 'verified' ? (
-                                        <> <CheckCircle2 size={16} /> Audit Passed </>
-                                    ) : (
-                                        <> <ShieldCheck size={16} /> Verify Ledger </>
-                                    )}
-                                </button>
-                              </div>
-                          </>
-                      ) : null}
-                  </div>
-                </section>
-                
-                {result && <BusinessValueCard />}
-                
-              </div>
-            </div>
-
-            <IntegrationBlueprint />
+            {/* Accordion 3: Blueprint */}
+            <AccordionSection title="実装: 社内モデルへの適用ブループリント" icon={Settings2}>
+               <IntegrationBlueprint />
+            </AccordionSection>
 
           </main>
         </div>
